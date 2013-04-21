@@ -40,7 +40,7 @@
 			var isWireFrameEnabled = false;
 			// Drahtgitter
 			var recursionDepth = 4;
-			// Rekursionstiefe (1-8 sinnvoll, ab 9 laueft es nicht mehr flüssig)
+			// Rekursionstiefe (1-8 sinnvoll, ab 9 laueft es nicht mehr richtig fluessig)
 
 			function initGL(canvas) {
 				try {
@@ -331,7 +331,7 @@
 						isWireFrameEnabled = false;
 					else
 						isWireFrameEnabled = true;
-				} else if (eventCode == "U") {
+				} else if (eventCode == "k") {
 					if (recursionDepth < 10)// Standard waren 5, ab 8,9 ruckels
 					{
 						recursionDepth += 1;
@@ -339,7 +339,7 @@
 						sphere = new Sphere(recursionDepth);
 						setSpherePolygonCount();
 					}
-				} else if (eventCode == "D") {
+				} else if (eventCode == "m") {
 					if (recursionDepth > 1) {
 						recursionDepth -= 1;
 						setTextForRecursionDepth();
@@ -412,14 +412,14 @@
 			}
 
 			function setTextForRecursionDepth() {
-				document.getElementById('recursionDepth').innerHTML = "recursionDepth: " + recursionDepth;
+				document.getElementById('recursionDepth').innerHTML = "recursionDepth (+/-): " + recursionDepth;
 			}
 
 			function setTextForPyramidAxis() {
 				var yAxis = (Math.round(yAxisBigSphere * 10) / 10) + "";
 				var zAxis = (Math.round(zAxisBigSphere * 10) / 10) + "";
 
-				document.getElementById('zAchse').innerHTML = "KugelAchse [" + 0 + ", " + yAxis + ", " + zAxis + "]";
+				document.getElementById('zAchse').innerHTML = "KugelAchse fuer Drehung (Pfeiltasten)[" + 0 + ", " + yAxis + ", " + zAxis + "]";
 			}
 
 			function setSpherePolygonCount() {
@@ -433,6 +433,7 @@
 	<body onload="webGLStart();">
 
 		<canvas id="lesson04-canvas" style="border: none;" width="500" height="500"></canvas>
+		<div>wire frame on/off (w)</div>
 		<div id="recursionDepth"></div>
 		<div id="spherePolygonCount"></div>
 		<div id="zAchse"></div>
