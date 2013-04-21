@@ -142,8 +142,6 @@
 				return degrees * Math.PI / 180;
 			}
 
-			//var pyramidVertexPositionBuffer;
-			//var pyramidVertexColorBuffer;
 			var cubeVertexPositionBuffer;
 			var cubeVertexColorBuffer;
 			var cubeVertexIndexBuffer;
@@ -210,6 +208,8 @@
 
 			var rPyramid = 0;
 			var rCube = 0;
+			var yAxisBigSphere = 0.1;
+			var zAxisBigSphere = 0;
 
 			function drawScene() {
 				gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -222,9 +222,8 @@
 				mat4.translate(mvMatrix, [-1.5, 0.0, -8.0]);
 
 				mvPushMatrix();
-				mat4.rotate(mvMatrix, degToRad(rPyramid), [0, 1, 0]);
+				mat4.rotate(mvMatrix, degToRad(rPyramid), [0, yAxisBigSphere, zAxisBigSphere]);
 
-				// sphere zeichnen
 				sphere.draw(isWireFrameEnabled);
 
 				mvPopMatrix();
@@ -246,8 +245,10 @@
 
 				mvPopMatrix();
 
-				mat4.scale(mvMatrix, [0.5, 0.5, 0.5]); // kugel 50% verkleinern
-				mat4.rotate(mvMatrix, degToRad(rCube), [1, 1, 1]); // Rotationsachse
+				mat4.scale(mvMatrix, [0.5, 0.5, 0.5]);
+				// kugel 50% verkleinern
+				mat4.rotate(mvMatrix, degToRad(rCube), [1, 1, 1]);
+				// Rotationsachse
 
 				mvPushMatrix();
 				// Kugel vorn rechts oben
@@ -258,21 +259,21 @@
 				mvPushMatrix();
 				// Kugel vorn links oben
 				mat4.translate(mvMatrix, [-2, 2, 2]);
-				sphere.draw(isWireFrameEnabled);		
+				sphere.draw(isWireFrameEnabled);
 				mvPopMatrix();
 
 				mvPushMatrix();
 				// Kugel vorn links unten
 				mat4.translate(mvMatrix, [-2, -2, 2]);
-				sphere.draw(isWireFrameEnabled);		
+				sphere.draw(isWireFrameEnabled);
 				mvPopMatrix();
 
 				mvPushMatrix();
 				// Kugel vorn rechts unten
 				mat4.translate(mvMatrix, [2, -2, 2]);
-				sphere.draw(isWireFrameEnabled);		
-				mvPopMatrix();				
-				
+				sphere.draw(isWireFrameEnabled);
+				mvPopMatrix();
+
 				mvPushMatrix();
 				// Kugel hinten rechts oben
 				mat4.translate(mvMatrix, [2, 2, -2]);
@@ -282,19 +283,19 @@
 				mvPushMatrix();
 				// Kugel hinten links oben
 				mat4.translate(mvMatrix, [-2, 2, -2]);
-				sphere.draw(isWireFrameEnabled);		
+				sphere.draw(isWireFrameEnabled);
 				mvPopMatrix();
 
 				mvPushMatrix();
 				// Kugel hinten links unten
 				mat4.translate(mvMatrix, [-2, -2, -2]);
-				sphere.draw(isWireFrameEnabled);		
+				sphere.draw(isWireFrameEnabled);
 				mvPopMatrix();
 
 				mvPushMatrix();
 				// Kugel vorn rechts unten
 				mat4.translate(mvMatrix, [2, -2, -2]);
-				sphere.draw(isWireFrameEnabled);		
+				sphere.draw(isWireFrameEnabled);
 				mvPopMatrix();
 			}
 
@@ -317,6 +318,76 @@
 				animate();
 			}
 
+			var currentlyPressedKeys = {};
+
+			function handleKeyDown(event) {
+
+				currentlyPressedKeys[event.keyCode] = true;
+				var eventCode = String.fromCharCode(event.keyCode);
+				//window.alert(eventCode);
+
+				if (eventCode == "W") {
+					if (isWireFrameEnabled)
+						isWireFrameEnabled = false;
+					else
+						isWireFrameEnabled = true;
+				} else if (eventCode == "U") {
+					if (recursionDepth < 10)// Standard waren 5, ab 8,9 ruckels
+					{
+						recursionDepth += 1;
+						setTextForRecursionDepth();
+						sphere = new Sphere(recursionDepth);
+						setSpherePolygonCount();
+					}
+				} else if (eventCode == "D") {
+					if (recursionDepth > 1) {
+						recursionDepth -= 1;
+						setTextForRecursionDepth();
+						sphere = new Sphere(recursionDepth);
+						setSpherePolygonCount();
+					}
+
+				}
+				// arrow up
+				else if (eventCode == "&") {
+					if (yAxisBigSphere < 1) {
+						yAxisBigSphere = (Math.round(yAxisBigSphere * 10) / 10) + 0.1;
+						// yAxisBigSphere += 0.1;
+						setTextForPyramidAxis();
+					}
+				}
+				// arrow down
+				else if (eventCode == "(") {
+					if (yAxisBigSphere > -1) {
+						yAxisBigSphere = (Math.round(yAxisBigSphere * 10) / 10) - 0.1;
+						// yAxisBigSphere -= 0.1;
+						setTextForPyramidAxis();
+					}
+				}
+				// arrow right
+				else if (eventCode == "'") {
+					if (zAxisBigSphere < 1) {
+						zAxisBigSphere = (Math.round(zAxisBigSphere * 10) / 10) + 0.1;
+						//zAxisBigSphere += 0.1;
+						setTextForPyramidAxis();
+					}
+				}
+				// arrow left
+				else if (eventCode == "%") {
+					if (zAxisBigSphere > -1) {
+						zAxisBigSphere = (Math.round(zAxisBigSphere * 10) / 10) - 0.1;
+						//zAxisBigSphere -= 0.1;
+						setTextForPyramidAxis();
+					}
+				}
+
+				// mit tab durch die einzelnen Elemente navigieren + steuern
+			}
+
+			function handleKeyUp(event) {
+				currentlyPressedKeys[event.keyCode] = false;
+			}
+
 			function webGLStart() {
 				var canvas = document.getElementById("lesson04-canvas");
 				initGL(canvas);
@@ -327,10 +398,32 @@
 				gl.enable(gl.DEPTH_TEST);
 				initBuffers();
 
-				gl.clearColor(0.0, 0.0, 0.0, 1.0);
-				gl.enable(gl.DEPTH_TEST);
+				document.onkeydown = handleKeyDown;
+				document.onkeyup = handleKeyUp;
 
+				initHtmlInfoTextElements();
 				tick();
+			}
+
+			function initHtmlInfoTextElements() {
+				setTextForPyramidAxis();
+				setSpherePolygonCount();
+				setTextForRecursionDepth();
+			}
+
+			function setTextForRecursionDepth() {
+				document.getElementById('recursionDepth').innerHTML = "recursionDepth: " + recursionDepth;
+			}
+
+			function setTextForPyramidAxis() {
+				var yAxis = (Math.round(yAxisBigSphere * 10) / 10) + "";
+				var zAxis = (Math.round(zAxisBigSphere * 10) / 10) + "";
+
+				document.getElementById('zAchse').innerHTML = "KugelAchse [" + 0 + ", " + yAxis + ", " + zAxis + "]";
+			}
+
+			function setSpherePolygonCount() {
+				document.getElementById('spherePolygonCount').innerHTML = "polygons (one sphere): " + Math.pow(4, (recursionDepth));
 			}
 
 		</script>
@@ -340,7 +433,13 @@
 	<body onload="webGLStart();">
 
 		<canvas id="lesson04-canvas" style="border: none;" width="500" height="500"></canvas>
+		<div id="recursionDepth"></div>
+		<div id="spherePolygonCount"></div>
+		<div id="zAchse"></div>
 
+		<div id="currentTimeInSeconds1"></div>
+		<div id="elapsedTimeInSeconds1"></div>
+		<div id="oldTimeInSeconds1"></div>
 	</body>
 
 </html>
