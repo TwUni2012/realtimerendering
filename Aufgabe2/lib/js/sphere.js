@@ -41,43 +41,37 @@ var Sphere = function (recursionDepth) {
         this.vertexColors.push((this.vertices[i] + 1) / 2); // x -> rot
         this.vertexColors.push((this.vertices[i + 1] + 1) / 2); // y -> gruen
         this.vertexColors.push((this.vertices[i + 2] + 1) / 2); // z -> blau       
-        this.vertexColors.push(1); // a
+        this.vertexColors.push(1); // alpha
     }
     
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertexColors), gl.STATIC_DRAW);
     this.vertexColorBuffer.itemSize = 4;
-    this.vertexColorBuffer.numItems = this.vertexColors.length / 4; 
-    
+    this.vertexColorBuffer.numItems = this.vertexColors.length / 4;  
 }
 
-Sphere.prototype.calculateMedianVector = function(a, b)
-{
+Sphere.prototype.calculateMedianVector = function(a, b) {
     // add the two vector to create a direction vector (median)
     var c = vec3.create(0,0,0);    
     vec3.add(a, b, c);    
     return this.normalize(c);
 }
 
-Sphere.prototype.normalize = function(vec)
-{
-    // the normalization function return the center (vector) of the median   
+Sphere.prototype.normalize = function(vec) {    
+	// the normalization function return the center (vector) of the median   
     vec3.normalize(vec);	
     var normalizedVector = [vec[0], vec[1], vec[2]];    
     return normalizedVector;
 }
 
 Sphere.prototype.tessellateTriangle = function(a, b, c, depth) {
-
-    if(depth == 1)
-    { 
+    if(depth == 1){ 
         // a recursion depth of 1 means to store the vertices and to break
         // the recursion
         this.vertices.push(a[0], a[1], a[2]);
         this.vertices.push(b[0], b[1], b[2]);
         this.vertices.push(c[0], c[1], c[2]);       
     }
-    else
-    {
+    else {
         // calculate the medians...   
         var ab = this.calculateMedianVector(a, b);    
         var ac = this.calculateMedianVector(a, c);
@@ -89,11 +83,9 @@ Sphere.prototype.tessellateTriangle = function(a, b, c, depth) {
         this.tessellateTriangle(ab, b, bc, depth-1);
         this.tessellateTriangle(ab, ac, bc, depth-1); 
     }  
-
 }
 
 Sphere.prototype.draw = function(isWireFrameEnabled) {
-		
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, this.vertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
     
@@ -104,6 +96,5 @@ Sphere.prototype.draw = function(isWireFrameEnabled) {
     if(isWireFrameEnabled)
         gl.drawArrays(gl.LINE_STRIP, 0, this.vertexPositionBuffer.numItems);
     else
-        gl.drawArrays(gl.TRIANGLES, 0, this.vertexPositionBuffer.numItems);
-        
+        gl.drawArrays(gl.TRIANGLES, 0, this.vertexPositionBuffer.numItems);  
 }

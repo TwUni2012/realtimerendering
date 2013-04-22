@@ -208,6 +208,8 @@
 
 			var rPyramid = 0;
 			var rCube = 0;
+
+			var xAxisBigSphere = 0;
 			var yAxisBigSphere = 0.1;
 			var zAxisBigSphere = 0;
 
@@ -222,7 +224,7 @@
 				mat4.translate(mvMatrix, [-1.5, 0.0, -8.0]);
 
 				mvPushMatrix();
-				mat4.rotate(mvMatrix, degToRad(rPyramid), [0, yAxisBigSphere, zAxisBigSphere]);
+				mat4.rotate(mvMatrix, degToRad(rPyramid), [xAxisBigSphere, yAxisBigSphere, zAxisBigSphere]);
 
 				sphere.draw(isWireFrameEnabled);
 
@@ -347,12 +349,21 @@
 						setSpherePolygonCount();
 					}
 
+				} else if (eventCode == "X") {
+					if (xAxisBigSphere > -1) {
+						xAxisBigSphere = (Math.round(xAxisBigSphere * 10) / 10) - 0.1;
+						setTextForPyramidAxis();
+					}
+				} else if (eventCode == "C") {
+					if (xAxisBigSphere < 1) {
+						xAxisBigSphere = (Math.round(xAxisBigSphere * 10) / 10) + 0.1;
+						setTextForPyramidAxis();
+					}
 				}
 				// arrow up
 				else if (eventCode == "&") {
 					if (yAxisBigSphere < 1) {
 						yAxisBigSphere = (Math.round(yAxisBigSphere * 10) / 10) + 0.1;
-						// yAxisBigSphere += 0.1;
 						setTextForPyramidAxis();
 					}
 				}
@@ -360,7 +371,6 @@
 				else if (eventCode == "(") {
 					if (yAxisBigSphere > -1) {
 						yAxisBigSphere = (Math.round(yAxisBigSphere * 10) / 10) - 0.1;
-						// yAxisBigSphere -= 0.1;
 						setTextForPyramidAxis();
 					}
 				}
@@ -368,7 +378,6 @@
 				else if (eventCode == "'") {
 					if (zAxisBigSphere < 1) {
 						zAxisBigSphere = (Math.round(zAxisBigSphere * 10) / 10) + 0.1;
-						//zAxisBigSphere += 0.1;
 						setTextForPyramidAxis();
 					}
 				}
@@ -376,7 +385,6 @@
 				else if (eventCode == "%") {
 					if (zAxisBigSphere > -1) {
 						zAxisBigSphere = (Math.round(zAxisBigSphere * 10) / 10) - 0.1;
-						//zAxisBigSphere -= 0.1;
 						setTextForPyramidAxis();
 					}
 				}
@@ -416,10 +424,10 @@
 			}
 
 			function setTextForPyramidAxis() {
+				var xAxis = (Math.round(xAxisBigSphere * 10) / 10) + "";
 				var yAxis = (Math.round(yAxisBigSphere * 10) / 10) + "";
 				var zAxis = (Math.round(zAxisBigSphere * 10) / 10) + "";
-
-				document.getElementById('zAchse').innerHTML = "KugelAchse fuer Drehung (Pfeiltasten)[" + 0 + ", " + yAxis + ", " + zAxis + "]";
+				document.getElementById('zAchse').innerHTML = "KugelAchse fuer Drehung (Pfeiltasten)[" + xAxis + ", " + yAxis + ", " + zAxis + "]";
 			}
 
 			function setSpherePolygonCount() {
@@ -433,7 +441,9 @@
 	<body onload="webGLStart();">
 
 		<canvas id="lesson04-canvas" style="border: none;" width="500" height="500"></canvas>
-		<div>wire frame on/off (w)</div>
+		<div>
+			wire frame on/off (w)
+		</div>
 		<div id="recursionDepth"></div>
 		<div id="spherePolygonCount"></div>
 		<div id="zAchse"></div>
