@@ -427,7 +427,7 @@
 				var xAxis = (Math.round(xAxisBigSphere * 10) / 10) + "";
 				var yAxis = (Math.round(yAxisBigSphere * 10) / 10) + "";
 				var zAxis = (Math.round(zAxisBigSphere * 10) / 10) + "";
-				document.getElementById('zAchse').innerHTML = "KugelAchse fuer Drehung (Pfeiltasten)[" + xAxis + ", " + yAxis + ", " + zAxis + "]";
+				document.getElementById('Achse').innerHTML = "KugelAchse fuer Drehung (Pfeiltasten)[" + xAxis + ", " + yAxis + ", " + zAxis + "]";
 			}
 
 			function setSpherePolygonCount() {
@@ -446,11 +446,10 @@
 		</div>
 		<div id="recursionDepth"></div>
 		<div id="spherePolygonCount"></div>
-		<div id="zAchse"></div>
-
-		<div id="currentTimeInSeconds1"></div>
-		<div id="elapsedTimeInSeconds1"></div>
-		<div id="oldTimeInSeconds1"></div>
+		<div id="Achse"></div>
+		xAchse: x/c<br/>
+		yAchse: Pfeil hoch/runter<br/>
+		zAchse: Pfeil links/rechts<br/>
 	</body>
 
 </html>
