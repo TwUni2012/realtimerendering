@@ -333,7 +333,7 @@
 						isWireFrameEnabled = false;
 					else
 						isWireFrameEnabled = true;
-				} else if (eventCode == "k") {
+				} else if (eventCode == "O") {
 					if (recursionDepth < 10)// Standard waren 5, ab 8,9 ruckels
 					{
 						recursionDepth += 1;
@@ -341,7 +341,7 @@
 						sphere = new Sphere(recursionDepth);
 						setSpherePolygonCount();
 					}
-				} else if (eventCode == "m") {
+				} else if (eventCode == "L") {
 					if (recursionDepth > 1) {
 						recursionDepth -= 1;
 						setTextForRecursionDepth();
@@ -420,7 +420,7 @@
 			}
 
 			function setTextForRecursionDepth() {
-				document.getElementById('recursionDepth').innerHTML = "recursionDepth (+/-): " + recursionDepth;
+				document.getElementById('recursionDepth').innerHTML = "recursionDepth (o/l): " + recursionDepth;
 			}
 
 			function setTextForPyramidAxis() {
